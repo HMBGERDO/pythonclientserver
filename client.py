@@ -16,7 +16,7 @@ def create_presence_message(username="guest"):
 
 def process_server_message(message):
     if RESPONSE in message:
-        print(f"Server responsed status {message[RESPONSE]}")
+        print(f"Server responsed with code {message[RESPONSE]}")
 
 def main():
     try:
