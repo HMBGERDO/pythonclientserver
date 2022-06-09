@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append("../")
 from server import create_response_message
 from config import TIME, RESPONSE
 from time import time

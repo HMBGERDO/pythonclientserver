@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append("../")
 from client import create_presence_message
 from config import TIME, USER, ACCOUNT_NAME, ACTION, PRECENSE
 from time import time
