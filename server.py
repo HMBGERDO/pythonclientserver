@@ -1,10 +1,11 @@
-from socket import *
+import socket
 import time
 from config import ACTION, TIME, USER, ACCOUNT_NAME, PRECENSE, RESPONSE, DEFAULT_PORT, MAX_CONNECTIONS
-from utils import send_message, receive_message
+from utils import send_message, receive_message, log
 import sys
 import logging
 import settings
+import time
 
 
 logger = logging.getLogger('server_logger')
@@ -15,6 +16,7 @@ def create_response_message(code):
     }
     return message
 
+@log
 def process_client_message(message):
     if ACTION in message and message[ACTION] == PRECENSE:
         logger.info(f'Client {message[USER][ACCOUNT_NAME]} precensed!')
@@ -40,9 +42,21 @@ def main():
         print('После параметра -\'a\' необходимо указать IP адрес для прослушивания.')
         sys.exit(1)
     logger.info(f"Server port: '{listen_port}' Server listen IP: '{listen_address}'")
-    server_socket = socket(AF_INET, SOCK_STREAM)
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     logger.debug("Socket created")
-    server_socket.bind((listen_address, listen_port))
+    socket_binded = False
+    attempts = 5
+    while not(socket_binded) and attempts > 0:
+        try:   
+            server_socket.bind((listen_address, listen_port))
+            socket_binded = True
+        except socket.error as message:
+            logger.warning(message)
+        attempts = attempts - 1
+        time.sleep(1)
+    if not(socket_binded):
+        logger.critical("Failed to bind socket")
+        return
     logger.debug("Socket binded")
     server_socket.listen(MAX_CONNECTIONS)
     logger.debug("Socket started listening")
