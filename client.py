@@ -6,6 +6,7 @@ import logging
 import sys
 import settings
 
+
 logger = logging.getLogger('client_logger')
 def create_presence_message(username="guest"):
     message = {
